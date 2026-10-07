@@ -1,0 +1,19 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // A trip is reachable only by its unguessable id (the invite link). Trips cannot be listed.
+    match /trips/{tripId} {
+      allow get, create, update, delete: if request.auth != null;
+      allow list: if false;
+      match /entries/{entryId} {
+        allow read, create, update: if request.auth != null;
+        allow delete: if false; // entries are voided, never deleted, so the audit trail stays complete
+      }
+    }
+    // Daily exchange rates (USD base). Any app user may add a day; nobody may change a saved day.
+    match /fx/{date} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null && request.resource.data.rates is map && request.resource.data.date == date;
+    }
+  }
+}
