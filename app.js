@@ -55,7 +55,7 @@ const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
 const lsSet=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}};
-const uid=p=>p+Math.random().toString(36).slice(2,8)+Date.now().toString(36).slice(-3);
+const uid=(p,n=20)=>{const a='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';const b=crypto.getRandomValues(new Uint8Array(n));let s='';for(const x of b)s+=a[x%62];return p+s};
 const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
 
 function digits(cur){try{return new Intl.NumberFormat('en',{style:'currency',currency:cur}).resolvedOptions().maximumFractionDigits}catch(e){return 2}}
